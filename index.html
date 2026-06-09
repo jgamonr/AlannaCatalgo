@@ -1,0 +1,1180 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Alanna's Boutique - Cliente</title>
+  <style>
+    :root {
+      --bg: #f7f2ee;
+      --ink: #27211f;
+      --muted: #756b66;
+      --line: #eadfd8;
+      --brand: #0f6b6d;
+      --brand-dark: #0a5355;
+      --rose: #c8808c;
+      --accent: #bf6f4a;
+      --good: #16794f;
+      --warn: #a35a00;
+      --shadow: 0 22px 60px rgba(43, 32, 27, .16);
+      font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      min-height: 100vh;
+      background:
+        linear-gradient(110deg, rgba(247, 242, 238, .96), rgba(247, 242, 238, .76), rgba(230, 244, 242, .92)),
+        url("assets/boutique-banner.png") center top / cover fixed;
+    }
+
+    button, input, select, textarea { font: inherit; }
+    button {
+      border: 0;
+      cursor: pointer;
+      min-height: 42px;
+      border-radius: 10px;
+      transition: transform .12s ease, box-shadow .12s ease, background .12s ease;
+    }
+    button:active { transform: translateY(1px); }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      color: #fff;
+      font-weight: 850;
+      padding: 10px 14px;
+      background: linear-gradient(135deg, var(--brand), var(--brand-dark));
+      box-shadow: 0 12px 28px rgba(15, 107, 109, .22);
+    }
+
+    .btn.secondary {
+      color: var(--ink);
+      background: rgba(255, 255, 255, .9);
+      border: 1px solid var(--line);
+      box-shadow: none;
+    }
+
+    .btn.good { background: var(--good); }
+    .btn:disabled { opacity: .48; cursor: not-allowed; box-shadow: none; }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: rgba(255, 252, 248, .78);
+      border-bottom: 1px solid rgba(255, 255, 255, .78);
+      backdrop-filter: blur(18px) saturate(1.12);
+      box-shadow: 0 12px 30px rgba(43, 32, 27, .1);
+    }
+
+    .topbar {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 12px 18px;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 14px;
+      align-items: center;
+    }
+
+    .brand {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      font-weight: 950;
+      white-space: nowrap;
+    }
+
+    .brand-mark {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      color: #fff;
+      background: linear-gradient(135deg, var(--brand), var(--rose));
+      box-shadow: 0 14px 28px rgba(15, 107, 109, .22);
+    }
+
+    .profile-pill {
+      justify-self: end;
+      display: grid;
+      grid-template-columns: 38px 1fr auto;
+      gap: 10px;
+      align-items: center;
+      min-width: min(360px, 100%);
+      padding: 8px;
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, .82);
+      background: rgba(255, 255, 255, .82);
+      box-shadow: 0 14px 32px rgba(58, 44, 35, .12);
+    }
+
+    .avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      color: #fff;
+      font-weight: 950;
+      background: linear-gradient(135deg, var(--brand), var(--rose));
+    }
+
+    .profile-label {
+      color: var(--muted);
+      font-size: 10px;
+      font-weight: 850;
+      text-transform: uppercase;
+    }
+
+    .profile-name {
+      font-size: 14px;
+      font-weight: 950;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .profile-status {
+      width: max-content;
+      max-width: 100%;
+      margin-top: 3px;
+      padding: 3px 7px;
+      border-radius: 999px;
+      color: #334155;
+      background: #f1f5f9;
+      font-size: 11px;
+      font-weight: 850;
+    }
+    .profile-status.approved { color: var(--good); background: #ecfdf5; }
+    .profile-status.pending { color: var(--warn); background: #fff7ed; }
+
+    main {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 24px 18px 46px;
+    }
+
+    .hero {
+      min-height: 420px;
+      display: grid;
+      align-items: end;
+      padding: clamp(22px, 5vw, 52px);
+      border-radius: 32px;
+      overflow: hidden;
+      color: #fff;
+      position: relative;
+      background:
+        linear-gradient(90deg, rgba(18, 23, 26, .9), rgba(18, 23, 26, .42), rgba(18, 23, 26, .08)),
+        url("assets/boutique-banner.png") center / cover;
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(255, 255, 255, .42);
+      margin-bottom: 18px;
+    }
+
+    .hero h1 {
+      max-width: 760px;
+      margin: 0;
+      font-size: clamp(34px, 6vw, 68px);
+      line-height: .96;
+      color: #fff;
+      text-shadow: 0 2px 22px rgba(0, 0, 0, .34);
+    }
+
+    .hero p {
+      max-width: 620px;
+      color: rgba(255, 255, 255, .9);
+      font-size: 17px;
+      margin: 12px 0 0;
+    }
+
+    .hero-chip {
+      display: inline-flex;
+      padding: 7px 10px;
+      margin-bottom: 12px;
+      border-radius: 999px;
+      color: #fff;
+      font-size: 12px;
+      font-weight: 900;
+      text-transform: uppercase;
+      background: rgba(255, 255, 255, .16);
+      border: 1px solid rgba(255, 255, 255, .42);
+      backdrop-filter: blur(10px);
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 18px;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 360px;
+      gap: 18px;
+      align-items: start;
+    }
+
+    .panel {
+      background: rgba(255, 255, 255, .88);
+      border: 1px solid rgba(255, 255, 255, .72);
+      border-radius: 22px;
+      padding: 18px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(16px) saturate(1.08);
+    }
+
+    .panel-title {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+
+    h2 { margin: 0 0 10px; font-size: 20px; }
+    p { color: var(--muted); margin: 6px 0 0; }
+
+    .toolbar {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+
+    .field { display: grid; gap: 6px; min-width: 160px; }
+    label {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 850;
+      text-transform: uppercase;
+    }
+    input, select, textarea {
+      width: 100%;
+      min-height: 42px;
+      padding: 9px 10px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: rgba(255, 255, 255, .94);
+      outline: none;
+      color: var(--ink);
+    }
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--brand);
+      box-shadow: 0 0 0 3px rgba(15, 107, 109, .14);
+    }
+
+    .catalog {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 16px;
+    }
+
+    .product-card {
+      display: grid;
+      gap: 10px;
+      min-height: 348px;
+      padding: 12px;
+      overflow: hidden;
+      border-radius: 22px;
+      border: 1px solid rgba(255, 255, 255, .78);
+      background: rgba(255, 255, 255, .92);
+      box-shadow: 0 16px 36px rgba(58, 44, 35, .14);
+    }
+
+    .product-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 24px 56px rgba(58, 44, 35, .2);
+    }
+
+    .product-image {
+      aspect-ratio: 4 / 5;
+      border-radius: 18px;
+      overflow: hidden;
+      position: relative;
+      background: linear-gradient(135deg, #f7d8ce, #f8f1e7 48%, #d9eeee);
+    }
+    .product-image img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+      object-position: center;
+    }
+
+    .badge {
+      position: absolute;
+      left: 10px;
+      top: 10px;
+      z-index: 1;
+      padding: 5px 8px;
+      border-radius: 999px;
+      color: var(--brand-dark);
+      background: rgba(255, 255, 255, .86);
+      border: 1px solid rgba(232, 221, 213, .9);
+      font-size: 11px;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .product-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: start;
+    }
+    .product-name { font-weight: 950; }
+    .meta { color: var(--muted); font-size: 13px; margin-top: 3px; }
+    .price { color: var(--brand-dark); font-weight: 950; white-space: nowrap; }
+    .product-foot {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .stock {
+      width: max-content;
+      padding: 5px 8px;
+      border-radius: 999px;
+      background: #ecfdf5;
+      color: var(--good);
+      font-size: 12px;
+      font-weight: 850;
+    }
+    .stock.low { background: #fff7ed; color: var(--warn); }
+    .stock.empty { background: #fef2f2; color: #b42318; }
+
+    .cart {
+      position: sticky;
+      top: 92px;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, .92), rgba(255, 250, 246, .88)),
+        url("assets/pantalon-palazzo.png") right -70px bottom -90px / 230px auto no-repeat;
+    }
+
+    .cart-list {
+      display: grid;
+      gap: 10px;
+      margin-top: 12px;
+    }
+    .line-item {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--line);
+    }
+    .line-item:last-child { border-bottom: 0; }
+
+    .qty-control {
+      display: inline-flex;
+      gap: 6px;
+      align-items: center;
+      border: 1px solid var(--line);
+      padding: 4px;
+      border-radius: 10px;
+      background: #fff;
+    }
+    .qty-control button {
+      min-height: 30px;
+      width: 30px;
+      color: var(--brand-dark);
+      background: #eef7f7;
+      font-weight: 950;
+    }
+    .qty-control span {
+      min-width: 24px;
+      text-align: center;
+      font-weight: 900;
+    }
+
+    .total-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      border-top: 1px solid var(--line);
+      margin-top: 14px;
+      padding-top: 14px;
+      font-size: 22px;
+      font-weight: 950;
+    }
+
+    .empty {
+      padding: 20px;
+      border: 1px dashed #cbd5e1;
+      border-radius: 12px;
+      color: var(--muted);
+      background: rgba(255, 255, 255, .78);
+      text-align: center;
+    }
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 40;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+      background: rgba(15, 23, 42, .54);
+    }
+    .modal-backdrop.active { display: flex; }
+    .modal {
+      width: 100%;
+      max-width: 560px;
+      padding: 18px;
+      border-radius: 18px;
+      background: #fff;
+      box-shadow: 0 24px 70px rgba(15, 23, 42, .24);
+    }
+    .modal.wide { max-width: 760px; }
+    .modal-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+    .modal-head h2 { margin: 0; }
+    .close {
+      width: 38px;
+      height: 38px;
+      display: grid;
+      place-items: center;
+      color: var(--ink);
+      background: #eef2f6;
+      font-size: 22px;
+    }
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+    .full { grid-column: 1 / -1; }
+    .new-client { display: none; }
+    .new-client.active { display: grid; }
+    textarea { min-height: 150px; resize: vertical; }
+    .message-preview {
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: linear-gradient(135deg, #f8fafc, #fff7ed);
+      margin: 12px 0;
+    }
+    .message-preview img {
+      width: 100%;
+      max-height: 360px;
+      object-fit: contain;
+      display: block;
+      border-radius: 10px;
+      background: #fff;
+    }
+    .actions { display: flex; gap: 10px; flex-wrap: wrap; }
+
+    .toast {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      z-index: 80;
+      max-width: min(360px, calc(100vw - 36px));
+      display: none;
+      padding: 12px 14px;
+      border-radius: 10px;
+      color: #fff;
+      background: #111827;
+      box-shadow: var(--shadow);
+    }
+    .toast.active { display: block; }
+
+    @media (max-width: 900px) {
+      .topbar { grid-template-columns: 1fr; align-items: start; }
+      .profile-pill { justify-self: stretch; min-width: 0; }
+      .layout { grid-template-columns: 1fr; }
+      .cart { position: static; }
+      .catalog { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 620px) {
+      main { padding: 16px 12px 34px; }
+      .topbar { padding: 12px; }
+      .hero { min-height: 380px; border-radius: 20px; padding: 20px; }
+      .hero h1 { font-size: 34px; }
+      .catalog, .form-grid { grid-template-columns: 1fr; }
+      .product-image { aspect-ratio: 1 / 1; }
+      .product-foot { grid-template-columns: 1fr; }
+      .product-foot .btn, .hero-actions .btn, .cart .btn { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="topbar">
+      <div class="brand">
+        <div class="brand-mark">A</div>
+        <div>Alanna's Boutique</div>
+      </div>
+      <div></div>
+      <div class="profile-pill">
+        <div class="avatar" id="profileInitial">?</div>
+        <div>
+          <div class="profile-label">Cliente</div>
+          <div class="profile-name" id="profileName">Sin perfil</div>
+          <div class="profile-status" id="profileStatus">Captura telefono</div>
+        </div>
+        <button class="btn secondary" id="openProfileBtn" type="button">Cambiar</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div>
+        <span class="hero-chip">Moda, boutique y accesorios</span>
+        <h1>Alanna's Boutique</h1>
+        <p>Elige tus prendas, confirma tu perfil y envia tu pedido para que la tienda lo autorice y te contacte por WhatsApp.</p>
+        <div class="hero-actions">
+          <button class="btn" onclick="document.getElementById('productSearch').focus()">Ver catalogo</button>
+          <button class="btn secondary" id="heroProfileBtn" type="button">Mi perfil</button>
+          <button class="btn secondary" id="configSheetBtn" type="button">Configurar Sheet</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="layout">
+      <div class="panel">
+        <div class="panel-title">
+          <div>
+            <h2>Catalogo</h2>
+            <p>Fotos de producto, precio y disponibilidad.</p>
+          </div>
+        </div>
+        <div class="toolbar">
+          <div class="field" style="flex: 1 1 260px;">
+            <label for="productSearch">Buscar</label>
+            <input id="productSearch" type="search" placeholder="Nombre, categoria o SKU">
+          </div>
+          <div class="field">
+            <label for="categoryFilter">Categoria</label>
+            <select id="categoryFilter"></select>
+          </div>
+        </div>
+        <div class="catalog" id="catalog"></div>
+      </div>
+
+      <aside class="panel cart">
+        <h2>Carrito</h2>
+        <p id="cartProfileHint">Selecciona tu perfil para enviar pedido.</p>
+        <div class="cart-list" id="cartList"></div>
+        <div class="total-row"><span>Total</span><span id="cartTotal">$0.00</span></div>
+        <button class="btn" id="sendOrderBtn" type="button" style="width: 100%; margin-top: 12px;">Enviar pedido</button>
+        <button class="btn secondary" id="whatsappCartBtn" type="button" style="width: 100%; margin-top: 10px;">WhatsApp carrito</button>
+      </aside>
+    </section>
+  </main>
+
+  <div class="modal-backdrop" id="profileModal">
+    <div class="modal">
+      <div class="modal-head">
+        <h2>Perfil de cliente</h2>
+        <button class="close" id="closeProfileModal" type="button" aria-label="Cerrar">&times;</button>
+      </div>
+      <p style="margin-bottom: 14px;">Captura tu telefono. Si no estas registrada, enviaremos tu solicitud de alta a la tienda.</p>
+      <form id="profileForm" class="form-grid">
+        <div class="field full">
+          <label for="phoneInput">Telefono</label>
+          <input id="phoneInput" inputmode="tel" required placeholder="Ej. 6641234567">
+        </div>
+        <div class="field full" id="lookupResult"></div>
+        <div class="field new-client">
+          <label for="clientNameInput">Nombre</label>
+          <input id="clientNameInput">
+        </div>
+        <div class="field new-client">
+          <label for="departmentInput">Departamento</label>
+          <input id="departmentInput">
+        </div>
+        <button class="btn full" type="submit" id="profileSubmitBtn">Usar perfil</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="sentModal">
+    <div class="modal">
+      <div class="modal-head">
+        <h2>Pedido enviado</h2>
+        <button class="close" id="closeSentModal" type="button" aria-label="Cerrar">&times;</button>
+      </div>
+      <p>Tu pedido fue enviado a recepcion. Alanna's Boutique se comunicara contigo via WhatsApp para confirmar el seguimiento.</p>
+      <button class="btn full" id="acceptSentModal" type="button" style="width: 100%; margin-top: 14px;">Entendido</button>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="whatsappModal">
+    <div class="modal wide">
+      <div class="modal-head">
+        <h2 id="whatsappTitle">Mensaje para WhatsApp</h2>
+        <button class="close" id="closeWhatsappModal" type="button" aria-label="Cerrar">&times;</button>
+      </div>
+      <div class="field">
+        <label for="whatsappMessage">Mensaje editable</label>
+        <textarea id="whatsappMessage"></textarea>
+      </div>
+      <div class="message-preview">
+        <img id="whatsappImage" alt="Imagen del mensaje">
+      </div>
+      <p>Descarga la imagen y adjuntala en WhatsApp cuando aplique.</p>
+      <div class="actions">
+        <a class="btn secondary" id="downloadImage" href="#" download="mensaje-alannas-boutique.png">Descargar imagen</a>
+        <button class="btn good" id="openWhatsappBtn" type="button">Abrir WhatsApp</button>
+        <button class="btn secondary" id="skipWhatsappBtn" type="button">Cerrar</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const STORAGE_KEY = "boutiqueGestionV1";
+    const SHEET_WEB_APP_URL_KEY = "alannasSheetWebAppUrl";
+    const SHEET_WEB_APP_URL = localStorage.getItem(SHEET_WEB_APP_URL_KEY) || "https://script.google.com/macros/s/AKfycbyDL_LF1ix9y8dQoSI2YI1PnlyLrh4VTNA6cLGW8QdBx9AltE4lGqEOlaKY2RsjA4La/exec";
+    const money = new Intl.NumberFormat("es-MX", { style: "currency", currency: "MXN" });
+    const seed = {
+      products: [
+        { id: uid(), name: "Blusa satinada", sku: "BLU-001", category: "Blusas", price: 420, stock: 12, image: "assets/blusa-satinada.png" },
+        { id: uid(), name: "Vestido midi floral", sku: "VES-014", category: "Vestidos", price: 980, stock: 7, image: "assets/vestido-midi-floral.png" },
+        { id: uid(), name: "Pantalon palazzo", sku: "PAN-009", category: "Pantalones", price: 650, stock: 9, image: "assets/pantalon-palazzo.png" },
+        { id: uid(), name: "Bolsa crossbody", sku: "BOL-022", category: "Accesorios", price: 540, stock: 5, image: "assets/bolsa-crossbody.png" },
+        { id: uid(), name: "Set de aretes dorados", sku: "ACC-033", category: "Accesorios", price: 180, stock: 20, image: "assets/aretes-dorados.png" },
+        { id: uid(), name: "Chaqueta mezclilla", sku: "CHA-004", category: "Chamarras", price: 890, stock: 4, image: "assets/chaqueta-mezclilla.png" }
+      ],
+      clients: [],
+      orders: [],
+      payments: [],
+      cart: [],
+      activeProfilePhone: "",
+      updatedAt: new Date().toISOString()
+    };
+
+    let state = loadState();
+    let clientCart = JSON.parse(localStorage.getItem("alannasClientCart") || "[]");
+    let whatsappPayload = null;
+
+    function uid() {
+      return Math.random().toString(36).slice(2) + Date.now().toString(36);
+    }
+
+    function loadState() {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return structuredClone(seed);
+      try {
+        const parsed = JSON.parse(raw);
+        if (!parsed.products) parsed.products = [];
+        if (!parsed.clients) parsed.clients = [];
+        if (!parsed.orders) parsed.orders = [];
+        if (!parsed.payments) parsed.payments = [];
+        if (!("activeProfilePhone" in parsed)) parsed.activeProfilePhone = "";
+        return parsed;
+      } catch {
+        return structuredClone(seed);
+      }
+    }
+
+    function saveState() {
+      state.updatedAt = new Date().toISOString();
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      syncStateToSheet("client-save");
+    }
+
+    function syncStateToSheet(reason = "client-save") {
+      const url = localStorage.getItem(SHEET_WEB_APP_URL_KEY) || SHEET_WEB_APP_URL;
+      if (!url) return;
+      const payload = {
+        source: "cliente",
+        reason,
+        sentAt: new Date().toISOString(),
+        state
+      };
+      fetch(url, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify(payload)
+      }).catch(() => toast("No se pudo sincronizar con Google Sheets."));
+    }
+
+    function configurarGoogleSheet(url) {
+      const value = String(url || "").trim();
+      if (!value) {
+        localStorage.removeItem(SHEET_WEB_APP_URL_KEY);
+        toast("Sincronizacion con Sheets desactivada.");
+        return;
+      }
+      localStorage.setItem(SHEET_WEB_APP_URL_KEY, value);
+      syncStateToSheet("client-config");
+      toast("Google Sheet configurada.");
+    }
+
+    function saveCart() {
+      localStorage.setItem("alannasClientCart", JSON.stringify(clientCart));
+    }
+
+    function toast(message) {
+      const el = document.getElementById("toast");
+      el.textContent = message;
+      el.classList.add("active");
+      setTimeout(() => el.classList.remove("active"), 2600);
+    }
+
+    function productImage(product) {
+      const imagesBySku = {
+        "BLU-001": "assets/blusa-satinada.png",
+        "VES-014": "assets/vestido-midi-floral.png",
+        "PAN-009": "assets/pantalon-palazzo.png",
+        "BOL-022": "assets/bolsa-crossbody.png",
+        "ACC-033": "assets/aretes-dorados.png",
+        "CHA-004": "assets/chaqueta-mezclilla.png"
+      };
+      return product.image || imagesBySku[product.sku] || "";
+    }
+
+    function productImageFromItem(item) {
+      const product = state.products.find(product => product.id === item.productId || product.sku === item.sku);
+      return product ? productImage(product) : productImage({ sku: item.sku });
+    }
+
+    function stockClass(stock) {
+      if (stock <= 0) return "empty";
+      if (stock <= 5) return "low";
+      return "";
+    }
+
+    function activeClient() {
+      return state.clients.find(client => client.phone === state.activeProfilePhone);
+    }
+
+    function cartItems() {
+      return clientCart.map(item => {
+        const product = state.products.find(product => product.id === item.productId);
+        if (!product) return null;
+        return { productId: product.id, name: product.name, sku: product.sku, price: product.price, qty: item.qty };
+      }).filter(Boolean);
+    }
+
+    function cartTotal() {
+      return cartItems().reduce((sum, item) => sum + item.price * item.qty, 0);
+    }
+
+    function renderProfile() {
+      const client = activeClient();
+      const name = document.getElementById("profileName");
+      const initial = document.getElementById("profileInitial");
+      const status = document.getElementById("profileStatus");
+      const hint = document.getElementById("cartProfileHint");
+      if (!client) {
+        name.textContent = state.activeProfilePhone ? "Perfil no registrado" : "Sin perfil";
+        initial.textContent = "?";
+        status.textContent = state.activeProfilePhone ? "Requiere alta" : "Captura telefono";
+        status.className = "profile-status";
+        hint.textContent = "Selecciona tu perfil para enviar pedido.";
+        return;
+      }
+      name.textContent = client.name;
+      initial.textContent = client.name.charAt(0).toUpperCase();
+      status.textContent = client.approved ? "Autorizado" : "En espera";
+      status.className = `profile-status ${client.approved ? "approved" : "pending"}`;
+      hint.textContent = client.approved ? "Tu pedido se enviara a recepcion para autorizacion." : "Tu perfil esta en espera de alta.";
+    }
+
+    function renderCatalog() {
+      const search = document.getElementById("productSearch").value.trim().toLowerCase();
+      const selectedCategory = document.getElementById("categoryFilter").value;
+      const categories = ["Todas", ...new Set(state.products.map(product => product.category).sort())];
+      document.getElementById("categoryFilter").innerHTML = categories.map(category => `<option ${category === selectedCategory ? "selected" : ""}>${escapeHtml(category)}</option>`).join("");
+      const products = state.products.filter(product => {
+        const matchesSearch = [product.name, product.category, product.sku].join(" ").toLowerCase().includes(search);
+        const matchesCategory = !selectedCategory || selectedCategory === "Todas" || product.category === selectedCategory;
+        return matchesSearch && matchesCategory;
+      });
+      document.getElementById("catalog").innerHTML = products.length ? products.map(product => `
+        <article class="product-card">
+          <div class="product-image">
+            <span class="badge">${escapeHtml(product.category)}</span>
+            ${productImage(product) ? `<img src="${escapeHtml(productImage(product))}" alt="${escapeHtml(product.name)}">` : ""}
+          </div>
+          <div class="product-top">
+            <div>
+              <div class="product-name">${escapeHtml(product.name)}</div>
+              <div class="meta">${escapeHtml(product.sku)}</div>
+            </div>
+            <div class="price">${money.format(product.price)}</div>
+          </div>
+          <div class="product-foot">
+            <span class="stock ${stockClass(product.stock)}">${product.stock} disponibles</span>
+            <button class="btn" data-add="${product.id}" ${product.stock <= 0 ? "disabled" : ""}>Agregar</button>
+          </div>
+        </article>
+      `).join("") : `<div class="empty">No hay productos con ese filtro.</div>`;
+    }
+
+    function renderCart() {
+      const items = cartItems();
+      document.getElementById("cartList").innerHTML = items.length ? items.map(item => {
+        const product = state.products.find(product => product.id === item.productId);
+        return `
+          <div class="line-item">
+            <div>
+              <strong>${escapeHtml(item.name)}</strong>
+              <div class="meta">${money.format(item.price)} c/u</div>
+            </div>
+            <div class="qty-control">
+              <button data-qty="${item.productId}" data-delta="-1">-</button>
+              <span>${item.qty}</span>
+              <button data-qty="${item.productId}" data-delta="1" ${product && item.qty >= product.stock ? "disabled" : ""}>+</button>
+            </div>
+          </div>
+        `;
+      }).join("") : `<div class="empty">Tu carrito esta vacio.</div>`;
+      document.getElementById("cartTotal").textContent = money.format(cartTotal());
+      document.getElementById("sendOrderBtn").disabled = !items.length;
+      document.getElementById("whatsappCartBtn").disabled = !items.length;
+    }
+
+    function render() {
+      renderProfile();
+      renderCatalog();
+      renderCart();
+    }
+
+    function addToCart(productId) {
+      const product = state.products.find(product => product.id === productId);
+      if (!product || product.stock <= 0) return;
+      const item = clientCart.find(item => item.productId === productId);
+      if (item) {
+        if (item.qty < product.stock) item.qty += 1;
+      } else {
+        clientCart.push({ productId, qty: 1 });
+      }
+      saveCart();
+      renderCart();
+    }
+
+    function changeQty(productId, delta) {
+      const item = clientCart.find(item => item.productId === productId);
+      const product = state.products.find(product => product.id === productId);
+      if (!item || !product) return;
+      item.qty += Number(delta);
+      if (item.qty <= 0) clientCart = clientCart.filter(cartItem => cartItem.productId !== productId);
+      if (item.qty > product.stock) item.qty = product.stock;
+      saveCart();
+      renderCart();
+    }
+
+    function openProfileModal() {
+      document.getElementById("phoneInput").value = state.activeProfilePhone || "";
+      document.getElementById("clientNameInput").value = "";
+      document.getElementById("departmentInput").value = "";
+      updateLookup();
+      document.getElementById("profileModal").classList.add("active");
+      document.getElementById("phoneInput").focus();
+    }
+
+    function closeProfileModal() {
+      document.getElementById("profileModal").classList.remove("active");
+    }
+
+    function updateLookup() {
+      const phone = document.getElementById("phoneInput").value.trim();
+      const client = state.clients.find(client => client.phone === phone);
+      const result = document.getElementById("lookupResult");
+      const newFields = document.querySelectorAll(".new-client");
+      newFields.forEach(field => field.classList.toggle("active", !!phone && !client));
+      document.getElementById("clientNameInput").required = !!phone && !client;
+      document.getElementById("departmentInput").required = !!phone && !client;
+      if (!phone) {
+        result.innerHTML = `<span class="profile-status">Captura telefono</span>`;
+        document.getElementById("profileSubmitBtn").textContent = "Usar perfil";
+      } else if (client) {
+        result.innerHTML = `<span class="profile-status ${client.approved ? "approved" : "pending"}">${client.approved ? "Cliente autorizado" : "En espera de autorizacion"}</span>`;
+        document.getElementById("profileSubmitBtn").textContent = "Usar perfil";
+      } else {
+        result.innerHTML = `<span class="profile-status pending">No registrado: solicitar alta</span>`;
+        document.getElementById("profileSubmitBtn").textContent = "Solicitar alta";
+      }
+    }
+
+    function submitProfile(event) {
+      event.preventDefault();
+      const phone = document.getElementById("phoneInput").value.trim();
+      let client = state.clients.find(client => client.phone === phone);
+      if (!client) {
+        client = {
+          id: uid(),
+          phone,
+          name: document.getElementById("clientNameInput").value.trim(),
+          department: document.getElementById("departmentInput").value.trim(),
+          approved: false,
+          requestedAt: new Date().toISOString()
+        };
+        state.clients.push(client);
+        toast("Solicitud de alta enviada.");
+      } else {
+        toast(client.approved ? "Perfil encontrado." : "Perfil en espera de autorizacion.");
+      }
+      state.activeProfilePhone = phone;
+      saveState();
+      closeProfileModal();
+      render();
+    }
+
+    function createOrder() {
+      const items = cartItems();
+      if (!items.length) {
+        toast("Agrega productos al carrito.");
+        return;
+      }
+      const client = activeClient();
+      if (!client) {
+        openProfileModal();
+        toast("Selecciona o solicita tu perfil.");
+        return;
+      }
+      state.orders.push({
+        id: uid(),
+        createdAt: new Date().toISOString(),
+        status: "pending",
+        clientId: client.approved ? client.id : null,
+        clientRequest: client.approved ? null : { phone: client.phone, name: client.name, department: client.department },
+        items
+      });
+      clientCart = [];
+      saveCart();
+      saveState();
+      render();
+      document.getElementById("sentModal").classList.add("active");
+    }
+
+    function normalizeWhatsappPhone(phone) {
+      const digits = String(phone || "").replace(/\D/g, "");
+      return digits.length === 10 ? `52${digits}` : digits;
+    }
+
+    function openWhatsApp(phone, message) {
+      const cleanPhone = normalizeWhatsappPhone(phone);
+      if (!cleanPhone) {
+        toast("No hay telefono para WhatsApp.");
+        return;
+      }
+      window.open(`https://wa.me/${cleanPhone}?text=${encodeURIComponent(message)}`, "_blank", "noopener");
+    }
+
+    function loadCanvasImage(src) {
+      return new Promise(resolve => {
+        if (!src) return resolve(null);
+        const img = new Image();
+        img.onload = () => resolve(img);
+        img.onerror = () => resolve(null);
+        img.src = src;
+      });
+    }
+
+    function roundedRect(ctx, x, y, width, height, radius) {
+      ctx.beginPath();
+      ctx.moveTo(x + radius, y);
+      ctx.lineTo(x + width - radius, y);
+      ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+      ctx.lineTo(x + width, y + height - radius);
+      ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+      ctx.lineTo(x + radius, y + height);
+      ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+      ctx.lineTo(x, y + radius);
+      ctx.quadraticCurveTo(x, y, x + radius, y);
+      ctx.closePath();
+    }
+
+    function drawCard(ctx, x, y, width, height, radius, fill) {
+      ctx.fillStyle = fill;
+      roundedRect(ctx, x, y, width, height, radius);
+      ctx.fill();
+    }
+
+    function wrapText(ctx, text, x, y, maxWidth, lineHeight, maxLines = 2) {
+      const words = String(text || "").split(" ");
+      let line = "";
+      let lines = 0;
+      words.forEach(word => {
+        const test = line ? `${line} ${word}` : word;
+        if (ctx.measureText(test).width > maxWidth && line) {
+          if (lines < maxLines) ctx.fillText(line, x, y + lines * lineHeight);
+          line = word;
+          lines += 1;
+        } else {
+          line = test;
+        }
+      });
+      if (line && lines < maxLines) ctx.fillText(line, x, y + lines * lineHeight);
+    }
+
+    async function generateMessageImage(context) {
+      const canvas = document.createElement("canvas");
+      canvas.width = 1080;
+      canvas.height = 1280;
+      const ctx = canvas.getContext("2d");
+      const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+      gradient.addColorStop(0, "#f9fafb");
+      gradient.addColorStop(.5, "#fff7ed");
+      gradient.addColorStop(1, "#e0f2f1");
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      drawCard(ctx, 70, 70, 940, 1140, 34, "#ffffff");
+      ctx.fillStyle = "#126e82";
+      ctx.font = "700 34px Arial";
+      ctx.fillText("Alanna's Boutique", 110, 135);
+      ctx.fillStyle = "#2b2b2b";
+      ctx.font = "800 54px Arial";
+      wrapText(ctx, context.title, 110, 215, 820, 58, 2);
+      ctx.fillStyle = "#756f69";
+      ctx.font = "700 28px Arial";
+      ctx.fillText(context.client?.name || "Cliente", 110, 310);
+      ctx.font = "24px Arial";
+      ctx.fillText(`${context.client?.department || "Sin departamento"} | ${context.client?.phone || "Sin telefono"}`, 110, 350);
+
+      let y = 430;
+      const images = await Promise.all(context.items.slice(0, 4).map(item => loadCanvasImage(productImageFromItem(item))));
+      context.items.slice(0, 4).forEach((item, index) => {
+        drawCard(ctx, 110, y - 35, 860, 150, 22, "#f8fafc");
+        const img = images[index];
+        if (img) {
+          ctx.save();
+          roundedRect(ctx, 130, y - 18, 112, 112, 16);
+          ctx.clip();
+          ctx.drawImage(img, 130, y - 18, 112, 112);
+          ctx.restore();
+        }
+        ctx.fillStyle = "#2b2b2b";
+        ctx.font = "800 28px Arial";
+        wrapText(ctx, `${item.name} x ${item.qty}`, 270, y + 15, 500, 32, 2);
+        ctx.fillStyle = "#126e82";
+        ctx.font = "800 30px Arial";
+        ctx.fillText(money.format(item.price * item.qty), 790, y + 35);
+        y += 165;
+      });
+      drawCard(ctx, 110, 1040, 860, 170, 26, "#126e82");
+      ctx.fillStyle = "#ffffff";
+      ctx.font = "700 26px Arial";
+      ctx.fillText("Total", 145, 1095);
+      ctx.font = "800 48px Arial";
+      ctx.fillText(money.format(context.total), 145, 1152);
+      ctx.font = "700 26px Arial";
+      ctx.fillText("Estado", 560, 1095);
+      ctx.font = "800 44px Arial";
+      ctx.fillText(context.status, 560, 1152);
+      return canvas.toDataURL("image/png");
+    }
+
+    async function openWhatsappModal(options) {
+      whatsappPayload = options;
+      document.getElementById("whatsappTitle").textContent = options.title;
+      document.getElementById("whatsappMessage").value = options.message;
+      document.getElementById("whatsappModal").classList.add("active");
+      document.getElementById("whatsappImage").removeAttribute("src");
+      const image = await generateMessageImage(options.imageContext);
+      if (whatsappPayload !== options) return;
+      document.getElementById("whatsappImage").src = image;
+      document.getElementById("downloadImage").href = image;
+    }
+
+    function requestCartWhatsapp() {
+      const items = cartItems();
+      if (!items.length) {
+        toast("Agrega productos al carrito.");
+        return;
+      }
+      const client = activeClient();
+      if (!client) {
+        openProfileModal();
+        toast("Selecciona o solicita tu perfil.");
+        return;
+      }
+      const total = cartTotal();
+      const productLines = items.map(item => `- ${item.name} x ${item.qty}: ${money.format(item.price * item.qty)}`).join("\n");
+      const message = [
+        `Hola ${client.name}, te compartimos el resumen de tu carrito en Alanna's Boutique.`,
+        productLines,
+        `Total estimado: ${money.format(total)}`,
+        client.approved ? "Cuando confirmes, enviaremos tu pedido a recepcion." : "Tu perfil esta en espera de autorizacion para continuar."
+      ].join("\n");
+      openWhatsappModal({
+        title: "WhatsApp de carrito",
+        message,
+        phone: client.phone,
+        imageContext: {
+          title: "Resumen de carrito",
+          client,
+          items,
+          total,
+          status: client.approved ? "Autorizado" : "En espera"
+        }
+      });
+    }
+
+    function escapeHtml(value) {
+      return String(value ?? "").replace(/[&<>"']/g, char => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#039;"
+      }[char]));
+    }
+
+    document.addEventListener("click", event => {
+      const add = event.target.closest("[data-add]");
+      const qty = event.target.closest("[data-qty]");
+      if (add) addToCart(add.dataset.add);
+      if (qty) changeQty(qty.dataset.qty, qty.dataset.delta);
+    });
+
+    document.getElementById("openProfileBtn").addEventListener("click", openProfileModal);
+    document.getElementById("heroProfileBtn").addEventListener("click", openProfileModal);
+    document.getElementById("configSheetBtn").addEventListener("click", () => {
+      const current = localStorage.getItem(SHEET_WEB_APP_URL_KEY) || "";
+      const url = prompt("Pega la URL del Web App de Google Apps Script:", current);
+      if (url !== null) configurarGoogleSheet(url);
+    });
+    document.getElementById("closeProfileModal").addEventListener("click", closeProfileModal);
+    document.getElementById("phoneInput").addEventListener("input", updateLookup);
+    document.getElementById("profileForm").addEventListener("submit", submitProfile);
+    document.getElementById("productSearch").addEventListener("input", renderCatalog);
+    document.getElementById("categoryFilter").addEventListener("change", renderCatalog);
+    document.getElementById("sendOrderBtn").addEventListener("click", createOrder);
+    document.getElementById("whatsappCartBtn").addEventListener("click", requestCartWhatsapp);
+    document.getElementById("closeSentModal").addEventListener("click", () => document.getElementById("sentModal").classList.remove("active"));
+    document.getElementById("acceptSentModal").addEventListener("click", () => document.getElementById("sentModal").classList.remove("active"));
+    document.getElementById("closeWhatsappModal").addEventListener("click", () => document.getElementById("whatsappModal").classList.remove("active"));
+    document.getElementById("skipWhatsappBtn").addEventListener("click", () => document.getElementById("whatsappModal").classList.remove("active"));
+    document.getElementById("openWhatsappBtn").addEventListener("click", () => {
+      if (!whatsappPayload) return;
+      openWhatsApp(whatsappPayload.phone, document.getElementById("whatsappMessage").value);
+      document.getElementById("whatsappModal").classList.remove("active");
+    });
+
+    window.addEventListener("storage", event => {
+      if (event.key !== STORAGE_KEY) return;
+      state = loadState();
+      render();
+    });
+
+    render();
+  </script>
+</body>
+</html>
